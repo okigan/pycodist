@@ -25,6 +25,8 @@ def thumb_install():
     print("install packages/modules needed for thumb functionality")
 
 
+# this function automatically wrapped into a [docker] container and separate [SQS] queue
+# making it execute remotely with all dependencies installed by the provided "install" function
 @dist(install=thumb_install)
 def thumb(url):
     image_file = download(url)
@@ -57,6 +59,7 @@ async def main():
     images = ["https://placekitten.com/200/300",
               "https://placekitten.com/300/400"]
 
+    # distmap would run similar to fork and join, individual invocation would run concurrently on different machines
     thumbs = distmap(thumb, images)
 
     for t in thumbs:
